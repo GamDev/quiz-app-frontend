@@ -1,4 +1,4 @@
-# Quiz App Front End
+# Quiz App Frontend
 
 This is the React frontend for the Quiz App project.
 
