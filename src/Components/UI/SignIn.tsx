@@ -11,14 +11,13 @@ function SignIn() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  
+
   const handleSignIn = async () => {
     setError("");
-   
-  
+
     if (!email || !emailRegex.test(email)) {
       setError(
-        !email ? "Email is required." : "Please enter a valid email address."
+        !email ? "Email is required." : "Please enter a valid email address.",
       );
       return;
     }
@@ -27,15 +26,15 @@ function SignIn() {
       setError(
         !password
           ? "Password is required."
-          : "Password must be at least 6 characters."
+          : "Password must be at least 6 characters.",
       );
-      
+
       return;
     }
-     setLoading(true);
+    setLoading(true);
     const loginRequest: LoginRequest = { email, password };
     try {
-      const authResponse = await AuthService.Login(loginRequest);
+      const authResponse = await AuthService.login(loginRequest);
       navigate("/dashboard");
     } catch (err: any) {
       setError(err.response?.data?.message || "Login failed");

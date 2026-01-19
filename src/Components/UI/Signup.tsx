@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import type { RegisterRequest } from "../../Models/RegisterRequest";
 
 function SignUp() {
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,21 +20,31 @@ function SignUp() {
     setError(null);
     setSuccess(null);
 
+    if (!fullName) {
+      setError("Please enter your full name");
+      return;
+    }
     if (!email || !emailRegex.test(email)) {
-      setError(!email ? "Email is required." : "Please enter a valid email address.");
+      setError(
+        !email ? "Email is required." : "Please enter a valid email address.",
+      );
       return;
     }
 
     if (!password || password.length < 6) {
-      setError(!password ? "Password is required." : "Password must be at least 6 characters.");
+      setError(
+        !password
+          ? "Password is required."
+          : "Password must be at least 6 characters.",
+      );
       return;
     }
 
     setLoading(true);
 
     try {
-      const registerRequest: RegisterRequest = { email, password };
-      const authResponse =   await AuthService.Register(registerRequest);
+      const registerRequest: RegisterRequest = { fullName, email, password };
+      const authResponse = await AuthService.register(registerRequest);
       setSuccess("Account created successfully!");
       setEmail("");
       setPassword("");
@@ -54,6 +65,15 @@ function SignUp() {
       </p>
 
       <div className="space-y-5">
+        <input
+          type="text"
+          placeholder="Full Name"
+          value={fullName}
+          disabled={loading}
+          onChange={(e) => setFullName(e.target.value)}
+          className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none disabled:bg-gray-100"
+        />
+
         <input
           type="email"
           placeholder="Email address"

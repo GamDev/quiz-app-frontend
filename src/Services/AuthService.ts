@@ -4,7 +4,11 @@ import type { AuthResponse } from "../Models/AuthResponse";
 import type { LoginRequest } from "../Models/LoginRequest";
 import type { RegisterRequest } from "../Models/RegisterRequest";
 import type { UserInfo } from "../Models/UserInfo";
-import { clearAccessToken, getAccessToken, setAccessToken } from "../utils/tokenStorage";
+import {
+  clearAccessToken,
+  getAccessToken,
+  setAccessToken,
+} from "../utils/tokenStorage";
 
 class AuthService {
   private readonly BASE = "/Auth";
@@ -12,7 +16,7 @@ class AuthService {
   async register(data: RegisterRequest): Promise<AuthResponse> {
     const response = await axiosApiClient.post<ApiResponse<AuthResponse>>(
       `${this.BASE}/register`,
-      data
+      data,
     );
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.message || "Registration failed");
@@ -22,10 +26,10 @@ class AuthService {
     return response.data.data;
   }
 
-  async Login(data: LoginRequest): Promise<AuthResponse> {
+  async login(data: LoginRequest): Promise<AuthResponse> {
     const response = await axiosApiClient.post<ApiResponse<AuthResponse>>(
       `${this.BASE}/login`,
-      data
+      data,
     );
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.message || "Login failed");
@@ -37,7 +41,7 @@ class AuthService {
 
   async getUserInfo(): Promise<UserInfo> {
     const response = await axiosApiClient.get<ApiResponse<UserInfo>>(
-      `${this.BASE}/me`
+      `${this.BASE}/me`,
     );
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.message || "Failed to fetch user info");
@@ -48,9 +52,8 @@ class AuthService {
   logout(): void {
     clearAccessToken();
   }
-  isAuthenticated() : boolean
-  {
-     return !!getAccessToken();
+  isAuthenticated(): boolean {
+    return !!getAccessToken();
   }
 }
 export default new AuthService();
