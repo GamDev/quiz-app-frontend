@@ -1,12 +1,13 @@
 import type { JSX } from "react";
-import { getAccessToken } from "../../utils/tokenStorage";
+import { getAccessToken } from "../utils/tokenStorage";
 import { Navigate } from "react-router-dom";
 
-interface ChildrenProps {
+interface RoleGuardProps {
   children: JSX.Element;
+  rolerequiredRole?: string;
 }
 
-const PrivateRoute = ({ children }: ChildrenProps) => {
+const RoleGuard = ({ children }: RoleGuardProps) => {
   const token = getAccessToken();
   if (!token) {
     return <Navigate to="/SignIn" replace />;
@@ -14,4 +15,4 @@ const PrivateRoute = ({ children }: ChildrenProps) => {
   return children;
 };
 
-export default PrivateRoute;
+export default RoleGuard;

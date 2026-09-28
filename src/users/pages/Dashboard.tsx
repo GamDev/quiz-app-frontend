@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthService from "../../Services/AuthService";
-import type { UserInfo } from "../../Models/UserInfo";
+import AuthService from "../../auth/services/AuthService";
+import type { UserInfo } from "../models/UserInfo";
+import UserService from "../services/UserService";
+import { useAuth } from "../../app/providers/AuthContext";
 
 function Dashboard() {
   const [user, setUser] = useState<UserInfo | null>(null);
@@ -9,6 +11,7 @@ function Dashboard() {
   const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
+  const { setIsAuthenticated } = useAuth();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -19,6 +22,7 @@ function Dashboard() {
         // Token invalid or expired
         setError("Session expired. Please login again.");
         AuthService.logout();
+        setIsAuthenticated(false);
         navigate("/login");
       } finally {
         setLoading(false);
@@ -29,9 +33,9 @@ function Dashboard() {
   }, [navigate]);
 
   const handleLogout = async () => {
-    
-   AuthService.logout();
-   navigate("/login");
+    AuthService.logout();
+    setIsAuthenticated(false);
+    navigate("/login");
   };
 
   if (loading) {

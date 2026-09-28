@@ -1,10 +1,8 @@
 import { Outlet, useLocation } from "react-router-dom";
-import Footer from "../Components/Layouts/Footer";
-import Header from "../Components/Layouts/Header";
-
+import Footer from "../../Shared/components/Footer";
+import Header from "../../Shared/components/Header";
 
 function Home() {
-  
   return (
     <div className="bg-white flex flex-col min-h-screen w-screen">
       <Header />

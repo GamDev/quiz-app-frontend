@@ -1,14 +1,14 @@
-import axiosApiClient from "../http/HttpClient";
-import type { ApiResponse } from "../Models/ApiResponse";
-import type { AuthResponse } from "../Models/AuthResponse";
-import type { LoginRequest } from "../Models/LoginRequest";
-import type { RegisterRequest } from "../Models/RegisterRequest";
-import type { UserInfo } from "../Models/UserInfo";
+import axiosApiClient from "../../Shared/api/axiosApiClient";
+import type { ApiResponse } from "../../Shared/models/ApiResponse";
+import type { AuthResponse } from "../models/AuthResponse";
+import type { LoginRequest } from "../models/LoginRequest";
+import type { RegisterRequest } from "../models/RegisterRequest";
+import type { UserInfo } from "../../users/models/UserInfo";
 import {
   clearAccessToken,
   getAccessToken,
   setAccessToken,
-} from "../utils/tokenStorage";
+} from "../../Shared/utils/tokenStorage";
 
 class AuthService {
   private readonly BASE = "/Auth";
@@ -49,8 +49,12 @@ class AuthService {
     return response.data.data;
   }
 
-  logout(): void {
-    clearAccessToken();
+  async logout(): Promise<void> {
+    try {
+      await axiosApiClient.post(`${this.BASE}/revoke`);
+    } finally {
+      clearAccessToken();
+    }
   }
   isAuthenticated(): boolean {
     return !!getAccessToken();

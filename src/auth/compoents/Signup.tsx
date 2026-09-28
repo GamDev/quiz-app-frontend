@@ -1,7 +1,7 @@
 import { useState } from "react";
-import AuthService from "../../Services/AuthService";
+import AuthService from "../services/AuthService";
 import { useNavigate } from "react-router-dom";
-import type { RegisterRequest } from "../../Models/RegisterRequest";
+import type { RegisterRequest } from "../models/RegisterRequest";
 
 function SignUp() {
   const [fullName, setFullName] = useState("");

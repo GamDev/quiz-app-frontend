@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import type { LoginRequest } from "../../Models/LoginRequest";
-import AuthService from "../../Services/AuthService";
+import type { LoginRequest } from "../models/LoginRequest";
+import AuthService from "../services/AuthService";
+import { useAuth } from "../../app/providers/AuthContext";
 
 function SignIn() {
+  const { setIsAuthenticated, setUser } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -34,8 +36,15 @@ function SignIn() {
     setLoading(true);
     const loginRequest: LoginRequest = { email, password };
     try {
-      const authResponse = await AuthService.login(loginRequest);
-      navigate("/dashboard");
+      await AuthService.login(loginRequest);
+      const user = await AuthService.getUserInfo();
+      setIsAuthenticated(true);
+      setUser(user);
+      if (user.role === "Admin") {
+        navigate("/admindashboard");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || "Login failed");
     } finally {
