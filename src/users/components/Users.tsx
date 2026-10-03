@@ -13,7 +13,7 @@ function Users() {
       setLoading(true);
       setError(null);
       try {
-        const usersInfo = await UserService.getAllUser();
+        const usersInfo = await UserService.getAllUsers();
         setUsers(usersInfo);
       } catch (err: any) {
         setError(err.message || "Failed to load users");

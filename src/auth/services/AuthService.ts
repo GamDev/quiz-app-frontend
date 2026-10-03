@@ -13,17 +13,29 @@ import {
 class AuthService {
   private readonly BASE = "/Auth";
 
+  private HandleResponse<T>(
+    response: ApiResponse<T>,
+    fallbackErrorMessage: string,
+  ) {
+    if (
+      !response.success ||
+      response.data === undefined ||
+      response.data === null
+    ) {
+      throw new Error(response.message || fallbackErrorMessage);
+    }
+    return response.data;
+  }
+
   async register(data: RegisterRequest): Promise<AuthResponse> {
     const response = await axiosApiClient.post<ApiResponse<AuthResponse>>(
       `${this.BASE}/register`,
       data,
     );
-    if (!response.data.success || !response.data.data) {
-      throw new Error(response.data.message || "Registration failed");
-    }
 
-    setAccessToken(response.data.data.accessToken);
-    return response.data.data;
+    const authData = this.HandleResponse(response.data, "Registration failed");
+    setAccessToken(authData.accessToken);
+    return authData;
   }
 
   async login(data: LoginRequest): Promise<AuthResponse> {
@@ -31,22 +43,21 @@ class AuthService {
       `${this.BASE}/login`,
       data,
     );
-    if (!response.data.success || !response.data.data) {
-      throw new Error(response.data.message || "Login failed");
-    }
 
-    setAccessToken(response.data.data.accessToken);
-    return response.data.data;
+    const authData = this.HandleResponse(response.data, "Login failed");
+    setAccessToken(authData.accessToken);
+    return authData;
   }
 
   async getUserInfo(): Promise<UserInfo> {
     const response = await axiosApiClient.get<ApiResponse<UserInfo>>(
       `${this.BASE}/me`,
     );
-    if (!response.data.success || !response.data.data) {
-      throw new Error(response.data.message || "Failed to fetch user info");
-    }
-    return response.data.data;
+    const authData = this.HandleResponse(
+      response.data,
+      "Failed to fetch user info",
+    );
+    return authData;
   }
 
   async logout(): Promise<void> {
@@ -56,6 +67,7 @@ class AuthService {
       clearAccessToken();
     }
   }
+
   isAuthenticated(): boolean {
     return !!getAccessToken();
   }

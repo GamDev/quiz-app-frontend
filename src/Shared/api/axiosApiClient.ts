@@ -22,4 +22,26 @@ axiosApiClient.interceptors.request.use(
     return Promise.reject(error);
   },
 );
+
+axiosApiClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    if (error.response?.status === 401) {
+      console.log("401 - Acsess token expired");
+      const refreshResponse = await axios.post(
+        `${BASE_API_URL}/Auth/refresh`,
+        null,
+        {
+          withCredentials: true,
+        },
+      );
+
+      console.log(refreshResponse.data);
+    }
+    return Promise.reject(error);
+  },
+);
+
 export default axiosApiClient;

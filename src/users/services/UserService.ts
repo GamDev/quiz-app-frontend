@@ -7,7 +7,7 @@ import type { PagedResult } from "../../Shared/models/PagedResult";
 class UserService {
   private readonly BASE = "/users";
 
-  async getAllUser(): Promise<UserInfo[]> {
+  async getAllUsers(): Promise<UserInfo[]> {
     const response = await axiosApiClient.get<
       ApiResponse<PagedResult<UserInfo>>
     >(`${this.BASE}/getAllUsers`);
